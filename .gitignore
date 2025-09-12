@@ -1,4 +1,3 @@
-Arquivo .gitignore padrão para projetos C#/.NET do Visual Studio
 Pastas de compilação e arquivos temporários
 [Bb]in/
 [Oo]bj/
