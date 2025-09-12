@@ -1,0 +1,22 @@
+Arquivo .gitignore padrão para projetos C#/.NET do Visual Studio
+Pastas de compilação e arquivos temporários
+[Bb]in/
+[Oo]bj/
+
+Pasta de configurações do Visual Studio
+.vs/
+
+Arquivos específicos do usuário
+*.user
+*.userosscache
+*.suo
+
+Arquivos de build e pacotes NuGet
+[Pp]ackages/
+*.nupkg
+*.nuget.props
+*.nuget.targets
+
+Arquivos de log e teste
+*.log
+TestResults/
