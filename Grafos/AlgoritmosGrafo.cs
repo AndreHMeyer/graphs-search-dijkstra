@@ -9,6 +9,7 @@ namespace Grafos
     {
         /// <summary>
         /// Coloração por Força Bruta - testa todas as combinações possíveis
+        /// Começa testando com 1 cor e incrementa até encontrar solução válida
         /// Retorna (0, null, tempo) se exceder o timeout
         /// </summary>
         public static (int numCores, int[] cores, double tempoMs) ColoracaoForcaBruta(this Grafo grafo, int timeoutSegundos = 30)
@@ -25,19 +26,8 @@ namespace Grafos
             int[] melhorColoracao = null;
             int numCores = 0;
 
-            // Verificar se o grafo tem arestas
-            bool temArestas = false;
-            for (int i = 0; i < n && !temArestas; i++)
-            {
-                if (grafo.RetornarVizinhos(i).Count > 0)
-                    temArestas = true;
-            }
-
-            // Se não tem arestas, 1 cor é suficiente
-            int kInicial = temArestas ? 2 : 1;
-
-            // Tenta com k cores, começando de kInicial
-            for (int k = kInicial; k <= n; k++)
+            // Tenta com k cores, começando de 1
+            for (int k = 1; k <= n; k++)
             {
                 // Verifica timeout
                 if (sw.Elapsed.TotalSeconds > timeoutSegundos)
@@ -103,6 +93,8 @@ namespace Grafos
 
         /// <summary>
         /// Coloração Sequencial Simples - sem ordem específica
+        /// Percorre os vértices em ordem arbitrária (0, 1, 2, ..., n-1)
+        /// e atribui a menor cor disponível que não conflite com os vizinhos
         /// </summary>
         public static (int numCores, int[] cores, double tempoMs) ColoracaoSequencial(this Grafo grafo)
         {
@@ -141,7 +133,8 @@ namespace Grafos
         }
 
         /// <summary>
-        /// Coloração Welsh-Powell - ordena por grau decrescente
+        /// Coloração Welsh-Powell - ordena vértices por grau decrescente
+        /// Vértices com maior grau são coloridos primeiro
         /// </summary>
         public static (int numCores, int[] cores, double tempoMs) ColoracaoWelshPowell(this Grafo grafo)
         {
@@ -195,7 +188,9 @@ namespace Grafos
         }
 
         /// <summary>
-        /// Coloração DSATUR - grau de saturação
+        /// Coloração DSATUR - baseado no grau de saturação
+        /// Escolhe sempre o vértice não colorido com maior número de cores diferentes
+        /// em seus vizinhos (grau de saturação). Em caso de empate, usa o maior grau.
         /// </summary>
         public static (int numCores, int[] cores, double tempoMs) ColoracaoDSATUR(this Grafo grafo)
         {
@@ -291,6 +286,9 @@ namespace Grafos
             return coresVizinhos.Count;
         }
 
+        /// <summary>
+        /// Imprime os resultados da coloração de forma formatada
+        /// </summary>
         public static void ImprimeColoracao(this Grafo grafo, string nomeAlgoritmo,
             int numCores, int[] cores, double tempoMs)
         {
@@ -307,6 +305,7 @@ namespace Grafos
             {
                 Console.WriteLine($"Número de cores utilizadas: {numCores}");
 
+                // Exibe detalhes apenas para grafos pequenos (< 10 vértices)
                 if (grafo.NumeroVertices < 10 && cores != null && cores.Length > 0)
                 {
                     Console.WriteLine("\nColoração dos vértices:");
@@ -322,6 +321,8 @@ namespace Grafos
 
         /// <summary>
         /// Algoritmo de Prim para Árvore Geradora Mínima
+        /// Funciona para grafos ponderados e não ponderados (peso = 1)
+        /// Requer grafo não-direcionado
         /// </summary>
         public static (List<(int origem, int destino, float peso)> arestas, float pesoTotal, double tempoMs)
             Prim(this Grafo grafo)
@@ -334,7 +335,6 @@ namespace Grafos
                 return (new List<(int, int, float)>(), 0, sw.Elapsed.TotalMilliseconds);
             }
 
-            // Aceita grafos não-ponderados tratando peso como 1
             if (grafo.Direcionado)
             {
                 sw.Stop();
@@ -410,6 +410,9 @@ namespace Grafos
 
         /// <summary>
         /// Algoritmo de Kruskal para Árvore Geradora Mínima
+        /// Funciona para grafos ponderados e não ponderados (peso = 1)
+        /// Requer grafo não-direcionado
+        /// Utiliza Union-Find para detectar ciclos
         /// </summary>
         public static (List<(int origem, int destino, float peso)> arestas, float pesoTotal, double tempoMs)
             Kruskal(this Grafo grafo)
@@ -422,7 +425,6 @@ namespace Grafos
                 return (new List<(int, int, float)>(), 0, sw.Elapsed.TotalMilliseconds);
             }
 
-            // Aceita grafos não-ponderados tratando peso como 1
             if (grafo.Direcionado)
             {
                 sw.Stop();
@@ -439,7 +441,7 @@ namespace Grafos
                 foreach (var v in vizinhos)
                 {
                     // Para evitar duplicatas em grafos não direcionados, u < v
-                    if (u < v || grafo.Direcionado)
+                    if (u < v)
                     {
                         float peso = grafo.PesoAresta(u, v);
                         todasArestas.Add((u, v, peso));
@@ -480,6 +482,9 @@ namespace Grafos
             return (mstArestas, pesoTotal, sw.Elapsed.TotalMilliseconds);
         }
 
+        /// <summary>
+        /// Imprime os resultados da MST de forma formatada
+        /// </summary>
         public static void ImprimeMST(this Grafo grafo, string nomeAlgoritmo,
             List<(int origem, int destino, float peso)> arestas, float pesoTotal, double tempoMs)
         {
@@ -495,6 +500,7 @@ namespace Grafos
                 Console.WriteLine("AVISO: O grafo não é conexo. MST parcial gerada.");
             }
 
+            // Exibe detalhes apenas para grafos pequenos (< 20 vértices)
             if (grafo.NumeroVertices < 20 && arestas.Count > 0)
             {
                 Console.WriteLine("\nArestas da MST:");
@@ -508,6 +514,10 @@ namespace Grafos
             Console.WriteLine();
         }
 
+        /// <summary>
+        /// Estrutura Union-Find (Disjoint Set) para o algoritmo de Kruskal
+        /// Implementa compressão de caminho e union por rank para eficiência
+        /// </summary>
         private class UnionFind
         {
             private int[] pai;
