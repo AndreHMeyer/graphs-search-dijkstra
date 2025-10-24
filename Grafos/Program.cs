@@ -8,337 +8,398 @@ namespace Grafos
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("=====================================");
-            Console.WriteLine("    PARTE 1    ");
+            Console.WriteLine("\n=====================================");
+            Console.WriteLine("    PARTE 3 - COLORAÇÃO    ");
             Console.WriteLine("=====================================\n");
 
-            ExecucaoParte1();
+            ExecucaoParte3();
 
             Console.WriteLine("\n");
-            Console.WriteLine("Pressione ENTER para continuar para a Parte 2...");
+            Console.WriteLine("Pressione ENTER para continuar para a Parte 4...");
             Console.ReadLine();
 
             Console.WriteLine("\n=====================================");
-            Console.WriteLine("    PARTE 2    ");
+            Console.WriteLine("    PARTE 4 - MST    ");
             Console.WriteLine("=====================================\n");
 
-            ExecucaoParte2();
+            ExecucaoParte4();
 
             Console.WriteLine("\n");
             Console.WriteLine("Pressione qualquer tecla para sair...");
             Console.ReadKey();
         }
 
-        static void ExecucaoParte1()
+        static void ExecucaoParte3()
         {
-            Console.WriteLine("1. IMPLEMENTAÇÃO LISTA DE ADJACÊNCIA");
-            Console.WriteLine("=" + new string('=', 48) + "\n");
+            Console.WriteLine("ALGORITMOS DE COLORAÇÃO DE GRAFOS");
+            Console.WriteLine("=" + new string('=', 50) + "\n");
 
-            // Criação do grafo com lista
-            var grafoLista = new GrafoLista(false, true); // não-direcionado, ponderado
+            // Teste 1: slides_modificado.txt
+            Console.WriteLine("1. TESTE COM GRAFO (slides_modificado.txt)");
+            Console.WriteLine("=" + new string('=', 43) + "\n");
 
-            Console.WriteLine("-> Inserindo vértices A, B, C, D:");
-            grafoLista.InserirVertice("A");
-            grafoLista.InserirVertice("B");
-            grafoLista.InserirVertice("C");
-            grafoLista.InserirVertice("D");
-
-            Console.WriteLine("-> Inserindo arestas ponderadas:");
-            Console.WriteLine("   A-B (peso 2.5), B-C (peso 3.0), C-D (peso 1.5), A-D (peso 4.0)");
-            grafoLista.InserirAresta(0, 1, 2.5f);
-            grafoLista.InserirAresta(1, 2, 3.0f);
-            grafoLista.InserirAresta(2, 3, 1.5f);
-            grafoLista.InserirAresta(0, 3, 4.0f);
-
-            Console.WriteLine("\n-> Resultado:");
-            grafoLista.ImprimeGrafo();
-
-            Console.WriteLine("-> Funções básicas:");
-            Console.WriteLine($"   - Existe aresta A->B? {grafoLista.ExisteAresta(0, 1)}");
-            Console.WriteLine($"   - Peso da aresta A->B: {grafoLista.PesoAresta(0, 1)}");
-            Console.WriteLine($"   - Label do vértice 0: '{grafoLista.LabelVertice(0)}'");
-            Console.WriteLine($"   - Vizinhos do vértice A: [{string.Join(", ", grafoLista.RetornarVizinhos(0))}]");
-
-            PausarExecucao();
-
-            // Testando remoções
-            Console.WriteLine("\n2. TESTANDO REMOÇÕES");
-            Console.WriteLine("=" + new string('=', 19) + "\n");
-
-            Console.WriteLine("-> Estado atual do grafo:");
-            grafoLista.ImprimeGrafo();
-
-            Console.WriteLine($"-> Removendo aresta A-B: {grafoLista.RemoverAresta(0, 1)}");
-            Console.WriteLine("-> Grafo após remoção da aresta A-B:");
-            grafoLista.ImprimeGrafo();
-
-            Console.WriteLine($"-> Removendo vértice D (índice 3): {grafoLista.RemoverVertice(3)}");
-            Console.WriteLine("-> Grafo após remoção do vértice D:");
-            grafoLista.ImprimeGrafo();
-
-            PausarExecucao();
-
-            Console.WriteLine("\n-> Testando acesso a aresta inexistente:");
-            try
-            {
-                Console.WriteLine("   Tentando acessar peso da aresta A-B (removida)...");
-                grafoLista.PesoAresta(0, 1);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Erro: {ex.GetType().Name} - {ex.Message}");
-            }
-
-            PausarExecucao();
-
-            // Matriz de adjacência
-            Console.WriteLine("\n4. IMPLEMENTAÇÃO MATRIZ DE ADJACÊNCIA");
-            Console.WriteLine("=" + new string('=', 39) + "\n");
-
-            var grafoMatriz = new GrafoMatriz(false, true);// não-direcionado, ponderado
-
-            Console.WriteLine("-> Criando o mesmo grafo com matriz de adjacência:");
-            grafoMatriz.InserirVertice("A");
-            grafoMatriz.InserirVertice("B");
-            grafoMatriz.InserirVertice("C");
-            grafoMatriz.InserirVertice("D");
-
-            grafoMatriz.InserirAresta(0, 1, 2.5f);
-            grafoMatriz.InserirAresta(1, 2, 3.0f);
-            grafoMatriz.InserirAresta(2, 3, 1.5f);
-            grafoMatriz.InserirAresta(0, 3, 4.0f);
-
-            grafoMatriz.ImprimeGrafo();
-
-            PausarExecucao();
-
-            // Comparação matriz vs lista
-            Console.WriteLine("\n5. COMPARAÇÃO: MATRIZ vs LISTA");
-            Console.WriteLine("=" + new string('=', 30) + "\n");
-
-            Console.WriteLine("-> Verificação de consistência:");
-            Console.WriteLine($"   Lista  - Existe aresta A->B: {grafoLista.ExisteAresta(0, 1)}");
-            Console.WriteLine($"   Matriz - Existe aresta A->B: {grafoMatriz.ExisteAresta(0, 1)}");
-
-            Console.WriteLine($"\n   Lista - Vizinhos de A: [{string.Join(", ", grafoLista.RetornarVizinhos(0))}]");
-            Console.WriteLine($"   Matriz - Vizinhos de A: [{string.Join(", ", grafoMatriz.RetornarVizinhos(0))}]");
-
-            PausarExecucao();
-
-            // Grafo direcionado
-            Console.WriteLine("\n6. GRAFO DIRECIONADO NÃO-PONDERADO");
-            Console.WriteLine("=" + new string('=', 34) + "\n");
-
-            var grafoDirecionado = new GrafoLista(true, false); // direcionado, não-ponderado
-
-            grafoDirecionado.InserirVertice("X");
-            grafoDirecionado.InserirVertice("Y");
-            grafoDirecionado.InserirVertice("Z");
-
-            Console.WriteLine("-> Inserindo arestas direcionadas: X->Y, Y->Z, Z->X");
-            grafoDirecionado.InserirAresta(0, 1); // X -> Y
-            grafoDirecionado.InserirAresta(1, 2); // Y -> Z
-            grafoDirecionado.InserirAresta(2, 0); // Z -> X
-
-            grafoDirecionado.ImprimeGrafo();
-
-            PausarExecucao();
-
-            // Algoritmos de busca
-            Console.WriteLine("\n7. ALGORITMOS DE BUSCA (CLASSE GRAFO)");
-            Console.WriteLine("=" + new string('=', 53) + "\n");
-
-            Console.WriteLine("-> Usando o grafo com lista de adjacência:");
-            grafoLista.ImprimeGrafo();
-
-            Console.WriteLine("-> Busca em Largura a partir do vértice 0 (A):");
-            var bfs = grafoLista.BuscaEmLargura(0);
-            Console.WriteLine($"   Ordem: [{string.Join(" -> ", bfs.Select(v => $"{v}({grafoLista.LabelVertice(v)})"))}]");
-
-            Console.WriteLine("\n-> Busca em Profundidade a partir do vértice 0 (A):");
-            var dfs = grafoLista.BuscaEmProfundidade(0);
-            Console.WriteLine($"   Ordem: [{string.Join(" -> ", dfs.Select(v => $"{v}({grafoLista.LabelVertice(v)})"))}]");
-
-            Console.WriteLine("\n-> Busca de Caminho de A para C:");
-            var caminho = grafoLista.BuscaCaminho(0, 2);
-            Console.WriteLine($"   Caminho: [{string.Join(" -> ", caminho.Select(v => $"{v}({grafoLista.LabelVertice(v)})"))}]");
-
-            Console.WriteLine("\n-> MESMOS ALGORITMOS executando na matriz:");
-            var bfsMatriz = grafoMatriz.BuscaEmLargura(0);
-            var dfsMatriz = grafoMatriz.BuscaEmProfundidade(0);
-            Console.WriteLine($"   BFS Matriz: [{string.Join(" -> ", bfsMatriz.Select(v => $"{v}({grafoMatriz.LabelVertice(v)})"))}]");
-            Console.WriteLine($"   DFS Matriz: [{string.Join(" -> ", dfsMatriz.Select(v => $"{v}({grafoMatriz.LabelVertice(v)})"))}]");
-        }
-
-        static void ExecucaoParte2()
-        {
-            var (caminhoEx, caminhoDijkstra, caminhoNaoPonderado, caminhoDesconexo, caminhoDirecionado) = CriarArquivosExemplo();
-
-            Console.WriteLine("1. LEITURA DE ARQUIVOS DE GRAFOS");
-            Console.WriteLine("=" + new string('=', 31) + "\n");
-
-            Console.WriteLine("-> Conteúdo do arquivo 'exemplo.txt':");
-            Console.WriteLine("   4 4 0 1    <- 4 vértices, 4 arestas, não-direcionado, ponderado");
-            Console.WriteLine("   0 1 2.5    <- aresta 0->1 com peso 2.5");
-            Console.WriteLine("   1 2 3.0    <- aresta 1->2 com peso 3.0");
-            Console.WriteLine("   2 3 1.5    <- aresta 2->3 com peso 1.5");
-            Console.WriteLine("   0 3 4.0    <- aresta 0->3 com peso 4.0");
+            string caminhoSlides = "ArquivosTeste\\slides_modificado.txt";
 
             try
             {
-                Console.WriteLine("\n-> Carregando com LISTA DE ADJACÊNCIA:");
-                var grafoLista = new GrafoLista(caminhoEx);
-                grafoLista.ImprimeGrafo();
+                Console.WriteLine($"-> Carregando grafo de: {caminhoSlides}");
+                var grafoSlidesOriginal = new GrafoLista(caminhoSlides);
 
-                Console.WriteLine("-> Carregando com MATRIZ DE ADJACÊNCIA:");
-                var grafoMatriz = new GrafoMatriz(caminhoEx);
-                grafoMatriz.ImprimeGrafo();
+                // Converter para grafo não-ponderado (coloração ignora pesos)
+                var grafoSlides = ConverterParaNaoPonderado(grafoSlidesOriginal);
 
-                PausarExecucao();
-
-                Console.WriteLine("\n2. ALGORITMOS DE BUSCA E DIJKSTRA");
-                Console.WriteLine("=" + new string('=', 33) + "\n");
-
-                Console.WriteLine("\n ALGORITMOS COM LISTA DE ADJACÊNCIA:");
-
-                grafoLista.ImprimeBuscaEmLargura(0);
-                grafoLista.ImprimeBuscaEmProfundidade(0);
-
-                PausarExecucao();
-
-                Console.WriteLine("\n3. TESTANDO DIJKSTRA");
-                Console.WriteLine("=" + new string('=', 20) + "\n");
-
-                Console.WriteLine("-> Carregando grafo direcionado ponderado para Dijkstra:");
-                Console.WriteLine("\n   Conteúdo do arquivo 'dijkstra.txt':");
-                Console.WriteLine("   5 8 1 1    <- 5 vértices, 8 arestas, direcionado, ponderado");
-
-                var grafoDijkstra = new GrafoLista(caminhoDijkstra);
-                grafoDijkstra.ImprimeGrafo();
-
-                grafoDijkstra.ImprimeDijkstra(0);
-
-                PausarExecucao();
-
-                Console.WriteLine("\n-> MESMOS ALGORITMOS COM MATRIZ DE ADJACÊNCIA:");
-                var grafoDijkstraMatriz = new GrafoMatriz(caminhoDijkstra);
-
-                grafoDijkstraMatriz.ImprimeBuscaEmLargura(0);
-                grafoDijkstraMatriz.ImprimeBuscaEmProfundidade(0);
-                grafoDijkstraMatriz.ImprimeDijkstra(0);
-
-                PausarExecucao();
-
-                Console.WriteLine("\n4. DIFERENTES FORMATOS DE ARQUIVO");
-                Console.WriteLine("=" + new string('=', 33) + "\n");
-
-                // Grafo não-ponderado
-                Console.WriteLine("-> Testando grafo NÃO-PONDERADO:");
-                var grafoNaoPonderado = new GrafoLista(caminhoNaoPonderado);
-                grafoNaoPonderado.ImprimeGrafo();
-
-                Console.WriteLine("-> Tentando executar Dijkstra em grafo não-ponderado:");
-                try
+                if (grafoSlidesOriginal.Ponderado)
                 {
-                    grafoNaoPonderado.ImprimeDijkstra(0);
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Erro: {ex.Message}");
+                    Console.WriteLine("   [Grafo convertido de ponderado para não-ponderado]");
                 }
 
-                PausarExecucao();
-
-                // Grafo direcionado
-                Console.WriteLine("\n-> Testando grafo DIRECIONADO:");
-                var grafoDirecionado = new GrafoLista(caminhoDirecionado);
-                grafoDirecionado.ImprimeGrafo();
-
-                Console.WriteLine("BFS a partir do vértice 0:");
-                grafoDirecionado.ImprimeBuscaEmLargura(0);
+                Console.WriteLine("\n-> Grafo carregado (para coloração):");
+                grafoSlides.ImprimeGrafo();
 
                 PausarExecucao();
 
-                Console.WriteLine("\n5. TESTANDO CONECTIVIDADE E CASOS ESPECIAIS");
-                Console.WriteLine("=" + new string('=', 43) + "\n");
-
-                Console.WriteLine("-> Grafo DESCONEXO (componentes separados):");
-                var grafoDesconexo = new GrafoLista(caminhoDesconexo);
-                grafoDesconexo.ImprimeGrafo();
-
-                Console.WriteLine($"-> Grafo é conexo? {grafoDesconexo.EhConexo()}");
-                Console.WriteLine($"-> Existe caminho 0->4? {grafoDesconexo.ExisteCaminho(0, 4)}");
-                Console.WriteLine($"-> Existe caminho 3->4? {grafoDesconexo.ExisteCaminho(3, 4)}");
-
-                Console.WriteLine("\n-> BFS a partir do vértice 0 (não alcança todos os vértices):");
-                grafoDesconexo.ImprimeBuscaEmLargura(0);
+                // Força Bruta
+                Console.WriteLine("-> Executando FORÇA BRUTA:");
+                Console.WriteLine("   (Testa todas as combinações possíveis)");
+                Console.WriteLine("   (Timeout: 30 segundos - se demorar muito, pula automaticamente)");
+                var (numCores1, coloracao1, tempo1) = grafoSlides.ColoracaoForcaBruta(30);
+                grafoSlides.ImprimeColoracao("Coloração por Força Bruta", numCores1, coloracao1, tempo1);
 
                 PausarExecucao();
 
+                // Heurística Sequencial Simples
+                Console.WriteLine("-> Executando HEURÍSTICA SEQUENCIAL SIMPLES:");
+                Console.WriteLine("   (Sem ordem específica de vértices)");
+                var (numCores2, coloracao2, tempo2) = grafoSlides.ColoracaoSequencial();
+                grafoSlides.ImprimeColoracao("Coloração Sequencial Simples", numCores2, coloracao2, tempo2);
+
+                PausarExecucao();
+
+                // Heurística Welsh-Powell
+                Console.WriteLine("-> Executando HEURÍSTICA WELSH-POWELL:");
+                Console.WriteLine("   (Ordena vértices por grau decrescente)");
+                var (numCores3, coloracao3, tempo3) = grafoSlides.ColoracaoWelshPowell();
+                grafoSlides.ImprimeColoracao("Coloração Welsh-Powell", numCores3, coloracao3, tempo3);
+
+                PausarExecucao();
+
+                // Heurística DSATUR
+                Console.WriteLine("-> Executando HEURÍSTICA DSATUR:");
+                Console.WriteLine("   (Escolhe vértice com maior grau de saturação)");
+                var (numCores4, coloracao4, tempo4) = grafoSlides.ColoracaoDSATUR();
+                grafoSlides.ImprimeColoracao("Coloração DSATUR", numCores4, coloracao4, tempo4);
+
+                PausarExecucao();
+
+                // Comparação de resultados
+                Console.WriteLine("\n=== COMPARAÇÃO DOS RESULTADOS (slides_modificado.txt) ===\n");
+                if (numCores1 > 0) // Se não deu timeout
+                    Console.WriteLine($"  Força Bruta:     {numCores1} cores em {tempo1:F6} ms");
+                else
+                    Console.WriteLine($"  Força Bruta:     TIMEOUT após {tempo1:F6} ms");
+                Console.WriteLine($"  Sequencial:      {numCores2} cores em {tempo2:F6} ms");
+                Console.WriteLine($"  Welsh-Powell:    {numCores3} cores em {tempo3:F6} ms");
+                Console.WriteLine($"  DSATUR:          {numCores4} cores em {tempo4:F6} ms");
+
+                PausarExecucao();
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Erro: {ex.Message}");
+                Console.WriteLine($"ERRO ao processar {caminhoSlides}: {ex.Message}\n");
+                PausarExecucao();
+            }
+
+            // Teste 2: slides.txt
+            Console.WriteLine("\n2. TESTE COM GRAFO (slides.txt)");
+            Console.WriteLine("=" + new string('=', 32) + "\n");
+
+            string caminhoSlidesNormal = "ArquivosTeste\\slides.txt";
+
+            try
+            {
+                Console.WriteLine($"-> Carregando grafo de: {caminhoSlidesNormal}");
+                var grafoSlidesNormalOriginal = new GrafoLista(caminhoSlidesNormal);
+
+                // Converter para grafo não-ponderado
+                var grafoSlidesNormal = ConverterParaNaoPonderado(grafoSlidesNormalOriginal);
+
+                if (grafoSlidesNormalOriginal.Ponderado)
+                {
+                    Console.WriteLine("   [Grafo convertido de ponderado para não-ponderado]");
+                }
+
+                Console.WriteLine("\n-> Grafo carregado:");
+                grafoSlidesNormal.ImprimeGrafo();
+
+                PausarExecucao();
+
+                // Força Bruta
+                Console.WriteLine("-> Executando FORÇA BRUTA:");
+                var (numCores5, coloracao5, tempo5) = grafoSlidesNormal.ColoracaoForcaBruta();
+                grafoSlidesNormal.ImprimeColoracao("Coloração por Força Bruta", numCores5, coloracao5, tempo5);
+
+                PausarExecucao();
+
+                // Heurística Sequencial
+                Console.WriteLine("-> Executando HEURÍSTICA SEQUENCIAL:");
+                var (numCores6, coloracao6, tempo6) = grafoSlidesNormal.ColoracaoSequencial();
+                grafoSlidesNormal.ImprimeColoracao("Coloração Sequencial Simples", numCores6, coloracao6, tempo6);
+
+                // Heurística Welsh-Powell
+                Console.WriteLine("-> Executando HEURÍSTICA WELSH-POWELL:");
+                var (numCores7, coloracao7, tempo7) = grafoSlidesNormal.ColoracaoWelshPowell();
+                grafoSlidesNormal.ImprimeColoracao("Coloração Welsh-Powell", numCores7, coloracao7, tempo7);
+
+                // Heurística DSATUR
+                Console.WriteLine("-> Executando HEURÍSTICA DSATUR:");
+                var (numCores8, coloracao8, tempo8) = grafoSlidesNormal.ColoracaoDSATUR();
+                grafoSlidesNormal.ImprimeColoracao("Coloração DSATUR", numCores8, coloracao8, tempo8);
+
+                PausarExecucao();
+
+                // Comparação de resultados
+                Console.WriteLine("\n=== COMPARAÇÃO DOS RESULTADOS (slides.txt) ===\n");
+                Console.WriteLine($"  Força Bruta:     {numCores5} cores em {tempo5:F6} ms");
+                Console.WriteLine($"  Sequencial:      {numCores6} cores em {tempo6:F6} ms");
+                Console.WriteLine($"  Welsh-Powell:    {numCores7} cores em {tempo7:F6} ms");
+                Console.WriteLine($"  DSATUR:          {numCores8} cores em {tempo8:F6} ms");
+
+                PausarExecucao();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"ERRO ao processar {caminhoSlidesNormal}: {ex.Message}\n");
+                PausarExecucao();
+            }
+
+            // Teste 3: espacoaereo.txt
+            Console.WriteLine("\n3. TESTE COM GRAFO (espacoaereo.txt)");
+            Console.WriteLine("=" + new string('=', 37) + "\n");
+
+            string caminhoEspaco = "ArquivosTeste\\espacoaereo.txt";
+
+            try
+            {
+                Console.WriteLine($"-> Carregando grafo de: {caminhoEspaco}");
+                var grafoEspacoOriginal = new GrafoLista(caminhoEspaco);
+
+                // Converter para grafo não-ponderado
+                var grafoEspaco = ConverterParaNaoPonderado(grafoEspacoOriginal);
+
+                if (grafoEspacoOriginal.Ponderado)
+                {
+                    Console.WriteLine("   [Grafo convertido de ponderado para não-ponderado]");
+                }
+
+                Console.WriteLine($"\n-> Grafo carregado: {grafoEspaco.NumeroVertices} vértices");
+                Console.WriteLine("\n-> Estrutura do grafo:");
+                grafoEspaco.ImprimeGrafo();
+
+                PausarExecucao();
+
+                // Força Bruta (AVISO: pode demorar muito!)
+                Console.WriteLine("-> Executando FORÇA BRUTA:");
+                Console.WriteLine("   A execução pode levar MUITO tempo ou não terminar.");
+                Console.WriteLine("   Pressione Ctrl+C se quiser cancelar.");
+                //var (numCores9, coloracao9, tempo9) = grafoEspaco.ColoracaoForcaBruta();
+                //grafoEspaco.ImprimeColoracao("Coloração por Força Bruta", numCores9, coloracao9, tempo9);
+
+                PausarExecucao();
+
+                // Heurística Sequencial
+                Console.WriteLine("-> Executando HEURÍSTICA SEQUENCIAL:");
+                var (numCores10, coloracao10, tempo10) = grafoEspaco.ColoracaoSequencial();
+                grafoEspaco.ImprimeColoracao("Coloração Sequencial Simples", numCores10, coloracao10, tempo10);
+
+                // Heurística Welsh-Powell
+                Console.WriteLine("-> Executando HEURÍSTICA WELSH-POWELL:");
+                var (numCores11, coloracao11, tempo11) = grafoEspaco.ColoracaoWelshPowell();
+                grafoEspaco.ImprimeColoracao("Coloração Welsh-Powell", numCores11, coloracao11, tempo11);
+
+                // Heurística DSATUR
+                Console.WriteLine("-> Executando HEURÍSTICA DSATUR:");
+                var (numCores12, coloracao12, tempo12) = grafoEspaco.ColoracaoDSATUR();
+                grafoEspaco.ImprimeColoracao("Coloração DSATUR", numCores12, coloracao12, tempo12);
+
+                PausarExecucao();
+
+                // Comparação final
+                Console.WriteLine("\n=== COMPARAÇÃO DOS RESULTADOS (espacoaereo.txt) ===\n");
+                //Console.WriteLine($"  Força Bruta:     {numCores9} cores em {tempo9:F6} ms");
+                Console.WriteLine($"  Sequencial:      {numCores10} cores em {tempo10:F6} ms");
+                Console.WriteLine($"  Welsh-Powell:    {numCores11} cores em {tempo11:F6} ms");
+                Console.WriteLine($"  DSATUR:          {numCores12} cores em {tempo12:F6} ms");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"ERRO ao processar {caminhoEspaco}: {ex.Message}\n");
             }
         }
 
-        static (string, string, string, string, string) CriarArquivosExemplo()
+        static void ExecucaoParte4()
         {
-            string caminhoArquivoExemplo = @"C:\Users\usuario\Downloads\exemplo.txt";
-            string caminhoArquivoDijkstra = @"C:\Users\usuario\Downloads\dijkstra.txt";
-            string caminhoNaoPonderado = @"C:\Users\usuario\Downloads\nao_ponderado.txt";
-            string caminhoDesconexo = @"C:\Users\usuario\Downloads\desconexo.txt";
-            string caminhoDirecionado = @"C:\Users\usuario\Downloads\direcionado.txt";
+            Console.WriteLine("ALGORITMOS DE ÁRVORE GERADORA MÍNIMA");
+            Console.WriteLine("=" + new string('=', 50) + "\n");
 
-            // Arquivo exemplo (não-direcionado, ponderado)
-            string exemplo = @"4 4 0 1
-                               0 1 2.5
-                               1 2 3.0
-                               2 3 1.5
-                               0 3 4.0";
+            // Teste 1: slides_modificado.txt
+            Console.WriteLine("1. TESTE COM GRAFO (slides_modificado.txt)");
+            Console.WriteLine("=" + new string('=', 43) + "\n");
 
-            File.WriteAllText(caminhoArquivoExemplo, exemplo);
+            string caminhoSlides = "ArquivosTeste\\slides_modificado.txt";
 
-            // Arquivo para Dijkstra (direcionado, ponderado)
-            string dijkstra = @"5 8 1 1
-                                0 1 4.0
-                                0 2 2.0
-                                1 2 1.0
-                                1 3 5.0
-                                2 3 8.0
-                                2 4 10.0
-                                3 4 2.0
-                                4 1 3.0";
+            try
+            {
+                Console.WriteLine($"-> Carregando grafo de: {caminhoSlides}");
+                var grafoSlides = new GrafoLista(caminhoSlides);
 
-            File.WriteAllText(caminhoArquivoDijkstra, dijkstra);
+                Console.WriteLine("\n-> Grafo carregado:");
+                grafoSlides.ImprimeGrafo();
 
-            // Arquivo não-ponderado
-            string naoPonderado = @"4 4 0 0
-                                    0 1
-                                    1 2
-                                    2 3
-                                    3 0";
+                PausarExecucao();
 
-            File.WriteAllText(caminhoNaoPonderado, naoPonderado);
+                // Algoritmo de Prim
+                Console.WriteLine("-> Executando ALGORITMO DE PRIM:");
+                Console.WriteLine("   (Constrói MST a partir de um vértice inicial)");
+                var (arestas1, peso1, tempo1) = grafoSlides.Prim();
+                grafoSlides.ImprimeMST("Algoritmo de Prim", arestas1, peso1, tempo1);
 
-            // Arquivo desconexo
-            string desconexo = @"5 3 0 1
-                                 0 1 1.0
-                                 1 2 2.0
-                                 3 4 1.5";
+                PausarExecucao();
 
-            File.WriteAllText(caminhoDesconexo, desconexo);
+                // Algoritmo de Kruskal
+                Console.WriteLine("-> Executando ALGORITMO DE KRUSKAL:");
+                Console.WriteLine("   (Ordena arestas e usa Union-Find)");
+                var (arestas2, peso2, tempo2) = grafoSlides.Kruskal();
+                grafoSlides.ImprimeMST("Algoritmo de Kruskal", arestas2, peso2, tempo2);
 
-            // Arquivo direcionado não-ponderado
-            string direcionado = @"4 4 1 0
-                                   0 1
-                                   1 2
-                                   2 3
-                                   3 0";
+                PausarExecucao();
 
-            File.WriteAllText(caminhoDirecionado, direcionado);
+                // Comparação
+                Console.WriteLine("\n=== COMPARAÇÃO DOS RESULTADOS (slides_modificado.txt) ===\n");
+                Console.WriteLine($"  Prim:     Peso = {peso1:0.##}, Tempo = {tempo1:F6} ms, Arestas = {arestas1.Count}");
+                Console.WriteLine($"  Kruskal:  Peso = {peso2:0.##}, Tempo = {tempo2:F6} ms, Arestas = {arestas2.Count}");
 
-            return (caminhoArquivoExemplo, caminhoArquivoDijkstra, caminhoNaoPonderado, caminhoDesconexo, caminhoDirecionado);
+                PausarExecucao();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"ERRO ao processar {caminhoSlides}: {ex.Message}\n");
+                PausarExecucao();
+            }
+
+            // Teste 2: slides.txt
+            Console.WriteLine("\n2. TESTE COM GRAFO (slides.txt)");
+            Console.WriteLine("=" + new string('=', 32) + "\n");
+
+            string caminhoSlidesNormal = "ArquivosTeste\\slides.txt";
+
+            try
+            {
+                Console.WriteLine($"-> Carregando grafo de: {caminhoSlidesNormal}");
+                var grafoSlidesNormal = new GrafoLista(caminhoSlidesNormal);
+
+                Console.WriteLine("\n-> Grafo carregado:");
+                grafoSlidesNormal.ImprimeGrafo();
+
+                PausarExecucao();
+
+                Console.WriteLine("-> Executando PRIM:");
+                var (arestas3, peso3, tempo3) = grafoSlidesNormal.Prim();
+                grafoSlidesNormal.ImprimeMST("Algoritmo de Prim", arestas3, peso3, tempo3);
+
+                Console.WriteLine("-> Executando KRUSKAL:");
+                var (arestas4, peso4, tempo4) = grafoSlidesNormal.Kruskal();
+                grafoSlidesNormal.ImprimeMST("Algoritmo de Kruskal", arestas4, peso4, tempo4);
+
+                PausarExecucao();
+
+                // Comparação
+                Console.WriteLine("\n=== COMPARAÇÃO DOS RESULTADOS (slides.txt) ===\n");
+                Console.WriteLine($"  Prim:     Peso = {peso3:0.##}, Tempo = {tempo3:F6} ms, Arestas = {arestas3.Count}");
+                Console.WriteLine($"  Kruskal:  Peso = {peso4:0.##}, Tempo = {tempo4:F6} ms, Arestas = {arestas4.Count}");
+
+                PausarExecucao();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"ERRO ao processar {caminhoSlidesNormal}: {ex.Message}\n");
+                PausarExecucao();
+            }
+
+            // Teste 3: espacoaereo.txt
+            Console.WriteLine("\n3. TESTE COM GRAFO (espacoaereo.txt)");
+            Console.WriteLine("=" + new string('=', 37) + "\n");
+
+            string caminhoEspaco = "ArquivosTeste\\espacoaereo.txt";
+
+            try
+            {
+                Console.WriteLine($"-> Carregando grafo de: {caminhoEspaco}");
+                var grafoEspaco = new GrafoLista(caminhoEspaco);
+
+                Console.WriteLine($"\n-> Grafo carregado: {grafoEspaco.NumeroVertices} vértices");
+                Console.WriteLine("\n-> Estrutura do grafo:");
+                grafoEspaco.ImprimeGrafo();
+
+                PausarExecucao();
+
+                Console.WriteLine("-> Executando PRIM:");
+                var (arestas5, peso5, tempo5) = grafoEspaco.Prim();
+                grafoEspaco.ImprimeMST("Algoritmo de Prim", arestas5, peso5, tempo5);
+
+                Console.WriteLine("-> Executando KRUSKAL:");
+                var (arestas6, peso6, tempo6) = grafoEspaco.Kruskal();
+                grafoEspaco.ImprimeMST("Algoritmo de Kruskal", arestas6, peso6, tempo6);
+
+                PausarExecucao();
+
+                // Comparação final
+                Console.WriteLine("\n=== COMPARAÇÃO DOS RESULTADOS (espacoaereo.txt) ===\n");
+                Console.WriteLine($"  Prim:     Peso = {peso5:0.##}, Tempo = {tempo5:F6} ms, Arestas = {arestas5.Count}");
+                Console.WriteLine($"  Kruskal:  Peso = {peso6:0.##}, Tempo = {tempo6:F6} ms, Arestas = {arestas6.Count}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"ERRO ao processar {caminhoEspaco}: {ex.Message}\n");
+            }
+        }
+
+
+        /// <summary>
+        /// Converte um grafo ponderado em não-ponderado para coloração.
+        /// Se o grafo já for não-ponderado, retorna ele mesmo sem conversão.
+        /// </summary>
+        static GrafoLista ConverterParaNaoPonderado(Grafo grafoOriginal)
+        {
+            // Se já é não-ponderado, não precisa converter
+            if (!grafoOriginal.Ponderado)
+            {
+                return (GrafoLista)grafoOriginal;
+            }
+
+            // Se é ponderado, converte para não-ponderado
+            var grafoNovo = new GrafoLista(grafoOriginal.Direcionado, false);
+
+            // Copiar vértices
+            for (int i = 0; i < grafoOriginal.NumeroVertices; i++)
+            {
+                grafoNovo.InserirVertice(grafoOriginal.LabelVertice(i));
+            }
+
+            // Copiar arestas (sem peso)
+            for (int i = 0; i < grafoOriginal.NumeroVertices; i++)
+            {
+                var vizinhos = grafoOriginal.RetornarVizinhos(i);
+                foreach (var j in vizinhos)
+                {
+                    // Para grafos não-direcionados, adicionar apenas se i < j para evitar duplicatas
+                    if (grafoOriginal.Direcionado || i < j)
+                    {
+                        grafoNovo.InserirAresta(i, j);
+                    }
+                }
+            }
+
+            return grafoNovo;
         }
 
         static void PausarExecucao()

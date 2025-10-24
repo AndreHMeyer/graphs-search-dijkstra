@@ -10,8 +10,8 @@ namespace Grafos
 {
     public abstract class Grafo
     {
-        protected readonly bool Direcionado;
-        protected readonly bool Ponderado;
+        public readonly bool Direcionado;
+        public readonly bool Ponderado;
         // Armazena os rótulos (labels) dos vértices pelo índice
         protected readonly List<string> _labels = new();
 
